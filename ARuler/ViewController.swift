@@ -10,66 +10,89 @@ import UIKit
 import SceneKit
 import ARKit
 
-class ViewController: UIViewController, ARSCNViewDelegate {
-
+final class ViewController: UIViewController, ARSCNViewDelegate {
+    
+    @IBOutlet weak var resultLabel: UILabel!
+    @IBOutlet weak var aimLabel: UILabel!
+    @IBOutlet weak var notReadyLabel: UILabel!
     @IBOutlet var sceneView: ARSCNView!
+    
+    let session = ARSession()
+    let vectorZero = SCNVector3()
+    //Note: https://stackoverflow.com/questions/46320198/arsessionconfiguration-unresolved-in-xcode-9-gm
+    let sessionConfig: ARConfiguration = ARWorldTrackingConfiguration()
+    var measuring = false
+    var startValue = SCNVector3()
+    var endValue = SCNVector3()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Set the view's delegate
-        sceneView.delegate = self
-        
-        // Show statistics such as fps and timing information
-        sceneView.showsStatistics = true
-        
-        // Create a new scene
-        let scene = SCNScene(named: "art.scnassets/ship.scn")!
-        
-        // Set the scene to the view
-        sceneView.scene = scene
+        setupScene()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
-        // Create a session configuration
-        let configuration = ARWorldTrackingConfiguration()
-
-        // Run the view's session
-        sceneView.session.run(configuration)
+        UIApplication.shared.isIdleTimerDisabled = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
-        // Pause the view's session
-        sceneView.session.pause()
-    }
-
-    // MARK: - ARSCNViewDelegate
-    
-/*
-    // Override to create and configure nodes for anchors added to the view's session.
-    func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
-        let node = SCNNode()
-     
-        return node
-    }
-*/
-    
-    func session(_ session: ARSession, didFailWithError error: Error) {
-        // Present an error message to the user
-        
+        session.pause()
     }
     
-    func sessionWasInterrupted(_ session: ARSession) {
-        // Inform the user that the session has been interrupted, for example, by presenting an overlay
+    func setupScene() {
+        sceneView.delegate = self
+        sceneView.session = session
         
+        session.run(sessionConfig, options: [.resetTracking, .removeExistingAnchors])
+        
+        resetValues()
     }
     
-    func sessionInterruptionEnded(_ session: ARSession) {
-        // Reset tracking and/or remove existing anchors if consistent tracking is required
+    func resetValues() {
+        measuring = false
+        startValue = SCNVector3()
+        endValue =  SCNVector3()
         
+        updateResultLabel(0.0)
     }
+    
+    func updateResultLabel(_ value: Float) {
+        let cm = value * 100.0
+        let inch = cm*0.3937007874
+//        resultLabel.text = String(format: "%.2f cm / %.2f\"", cm, inch)
+    }
+    
+    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        DispatchQueue.main.async {
+            self.detectObjects()
+        }
+    }
+    
+    func detectObjects() {
+        if let worldPos = sceneView.realWorldVector(screenPos: view.center) {
+            aimLabel.isHidden = false
+            notReadyLabel.isHidden = true
+            if measuring {
+                if startValue == vectorZero {
+                    startValue = worldPos
+                }
+                
+                endValue = worldPos
+                updateResultLabel(startValue.distance(from: endValue))
+            }
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        resetValues()
+        measuring = true
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        measuring = false
+    }
+    
 }
