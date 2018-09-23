@@ -449,7 +449,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sorianog.ARuler;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -467,7 +467,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sorianog.ARuler;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -560,7 +560,7 @@
 				74E11F942151E3FE001872DD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		74E11F952151E3FE001872DD /* Build configuration list for PBXNativeTarget "ARuler" */ = {
 			isa = XCConfigurationList;
@@ -569,7 +569,7 @@
 				74E11F972151E3FE001872DD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		74E11F982151E3FE001872DD /* Build configuration list for PBXNativeTarget "ARulerTests" */ = {
 			isa = XCConfigurationList;
@@ -578,7 +578,7 @@
 				74E11F9A2151E3FE001872DD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		74E11F9B2151E3FE001872DD /* Build configuration list for PBXNativeTarget "ARulerUITests" */ = {
 			isa = XCConfigurationList;
@@ -587,7 +587,7 @@
 				74E11F9D2151E3FE001872DD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
